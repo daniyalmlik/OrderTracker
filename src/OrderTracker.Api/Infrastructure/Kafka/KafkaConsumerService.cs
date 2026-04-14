@@ -24,6 +24,10 @@ public sealed class KafkaConsumerService(
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        // Yield immediately so host startup is not blocked by the synchronous
+        // Kafka consumer setup and the blocking Consume() call below.
+        await Task.Yield();
+
         var settings = kafkaOptions.Value;
 
         var config = new ConsumerConfig
@@ -34,38 +38,48 @@ public sealed class KafkaConsumerService(
             AutoOffsetReset = AutoOffsetReset.Earliest
         };
 
-        using var consumer = new ConsumerBuilder<string, string>(config).Build();
-        consumer.Subscribe(settings.Topic);
-
-        logger.LogInformation("Kafka consumer started. Topic: {Topic}", settings.Topic);
-
-        try
+        while (!stoppingToken.IsCancellationRequested)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                ConsumeResult<string, string>? result = null;
-                try
-                {
-                    result = consumer.Consume(stoppingToken);
-                    if (result?.Message?.Value is null) continue;
+                using var consumer = new ConsumerBuilder<string, string>(config).Build();
+                consumer.Subscribe(settings.Topic);
 
-                    await ProcessMessageAsync(result.Message.Value, stoppingToken);
-                    consumer.Commit(result);
-                }
-                catch (OperationCanceledException)
+                logger.LogInformation("Kafka consumer started. Topic: {Topic}", settings.Topic);
+
+                while (!stoppingToken.IsCancellationRequested)
                 {
-                    break;
+                    try
+                    {
+                        var result = consumer.Consume(stoppingToken);
+                        if (result?.Message?.Value is null) continue;
+
+                        await ProcessMessageAsync(result.Message.Value, stoppingToken);
+                        consumer.Commit(result);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "Error processing Kafka message. Offset will not be committed.");
+                    }
                 }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "Error processing Kafka message. Offset will not be committed.");
-                }
+
+                consumer.Close();
+                logger.LogInformation("Kafka consumer stopped.");
+                break;
             }
-        }
-        finally
-        {
-            consumer.Close();
-            logger.LogInformation("Kafka consumer stopped.");
+            catch (OperationCanceledException)
+            {
+                break;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Kafka consumer failed to initialize. Retrying in 10 seconds.");
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+            }
         }
     }
 

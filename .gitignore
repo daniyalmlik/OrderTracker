@@ -30,5 +30,12 @@ Thumbs.db
 .idea/
 *.DotSettings
 
-## VS Code
-.vscode/
+## VS Code (ignore personal settings, commit shared dev configs)
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+
+## Frontend
+src/orderpulse-client/node_modules/
+src/orderpulse-client/dist/
