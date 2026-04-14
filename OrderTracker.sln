@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2208DC34-087
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderTracker.Api", "src\OrderTracker.Api\OrderTracker.Api.csproj", "{0C0064F3-6FE5-41DA-99A2-8F77698AE8A8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{94720A87-A83F-4924-8FFC-63A4C0120558}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderTracker.Api.Tests", "tests\OrderTracker.Api.Tests\OrderTracker.Api.Tests.csproj", "{6B7CFEF6-FC67-442F-BB95-AEE53970E101}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +24,13 @@ Global
 		{0C0064F3-6FE5-41DA-99A2-8F77698AE8A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C0064F3-6FE5-41DA-99A2-8F77698AE8A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C0064F3-6FE5-41DA-99A2-8F77698AE8A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B7CFEF6-FC67-442F-BB95-AEE53970E101}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B7CFEF6-FC67-442F-BB95-AEE53970E101}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B7CFEF6-FC67-442F-BB95-AEE53970E101}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B7CFEF6-FC67-442F-BB95-AEE53970E101}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0C0064F3-6FE5-41DA-99A2-8F77698AE8A8} = {2208DC34-0879-4CE4-8D8E-9BB5F69C4830}
+		{6B7CFEF6-FC67-442F-BB95-AEE53970E101} = {94720A87-A83F-4924-8FFC-63A4C0120558}
 	EndGlobalSection
 EndGlobal

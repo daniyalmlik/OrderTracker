@@ -19,6 +19,9 @@ public sealed class PreferencesController : ControllerBase
     [HttpPost("theme")]
     public IActionResult SetTheme([FromBody] SetThemeRequest request)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(new { message = "Invalid theme value." });
+
         Response.Cookies.Append(ThemeCookieName, request.Theme, new CookieOptions
         {
             HttpOnly = false,            // Intentional: JS-accessible (contrasts with auth cookies)
