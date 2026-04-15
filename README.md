@@ -21,7 +21,7 @@ ASP.NET Core 8 API (port 5098)
     SignalR Hub ──► React (live order updates)
 ```
 
-Single API project — no microservices. Kafka runs in Docker (KRaft mode, no Zookeeper). SQL Server runs locally.
+Single API project. Kafka runs in Docker (KRaft mode). SQL Server runs locally.
 
 ## Tech Stack
 
